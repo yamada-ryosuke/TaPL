@@ -1,3 +1,5 @@
+#import "@preview/curryst:0.6.0": rule, prooftree
+
 // フォントを変える
 #set text(font: "Noto Sans CJK JP")
 
@@ -27,6 +29,8 @@
 )[
   #body
 ]
+
+#let asterarrow = $attach(arrow, tr: *)$
 
 // -------------------- ここから本文 --------------------
 #question("演習3.2.4.")[
@@ -136,3 +140,36 @@
     ならば、すべての$cal(D)$に対して$P(cal(D))$が成り立つ。
 ]
 
+#question("演習3.5.10.")[
+    $
+        prooftree(
+            rule(
+                name: (1),
+                t arrow t,
+                t asterarrow t'
+            )
+        )
+    $
+    $
+        prooftree(
+            rule(
+                name: (2),
+                t asterarrow t
+            )
+        )
+    $
+    $
+        prooftree(
+            rule(
+                name: (3),
+                t attach(arrow, tr: *) t',
+                t' asterarrow t'',
+                t asterarrow t''
+            )
+        )
+    $
+]
+
+#question("演習3.5.13.")[
+    
+]
