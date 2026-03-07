@@ -6,11 +6,19 @@
   show "。": "．"
   show "、": "，"
 
+  // 見出し1要素の装飾
+  show heading.where(level: 1): it => block(
+    width: 100%,
+    fill: blue,
+    inset: (top: 7pt, bottom: 7pt, left: 11pt),
+    text(fill: white, it),
+  )
+
   // 見出し2要素の装飾
   show heading.where(level: 2): it => block(
-    inset: (left: 0.8em),
+    inset: (left: 10pt),
     stroke: (left: 3pt + blue),
-    it
+    it,
   )
 
   // 本文
@@ -31,11 +39,14 @@
 ]
 
 // 左に線を引いてレベルを一個下げる
-#let down_level(body) = block(
+#let down_level(description: none,body) = block(
   inset: (left: 1em),
   stroke: (left: 1pt + gray),
   radius: 0pt,
 )[
+  #if description != none {
+    [*#description*\ ]
+  }
   #body
 ]
 
