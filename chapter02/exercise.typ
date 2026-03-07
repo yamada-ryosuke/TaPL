@@ -1,35 +1,10 @@
-// フォントを変える
-#set text(font: "Noto Sans CJK JP")
+#import "../template.typ": *
 
-// 句読点
-#show "。": "．"
-#show "、": "，"
-
-// 演習問題の解答の環境
-#let question(title, body) = [
-    == #title
-    #block(
-        fill: rgb("#e0ffff"),
-        inset: 8pt,
-        outset: 4pt,
-        radius: 4pt,
-        stroke: 1pt,
-    )[
-        #body
-    ]
-]
-
-// 左に線を引いてレベルを一個下げる
-#let down_level(body) = block(
-  inset: (left: 1em),
-  stroke: (left: 1pt + gray),
-  radius: 0pt,
-)[
-  #body
-]
+#show: config.with()
 
 // -------------------- ここから本文 --------------------
-#question("演習2.2.6.")[
+== 演習 2.2.6.
+#answer[
     #down_level[
         $s in S$を任意に取る。\
         $(s, s) in {(s, s) | s in S} subset R'$より$s R' s$。
@@ -52,7 +27,8 @@
     よって$R'$は反射的閉包である。
 ]
 
-#question("演習2.2.7.")[
+== 演習2.2.7.
+#answer[
     #down_level[
         $(s, t), (t, u) in R^+$を任意に取る。\
         $i_1, i_2 in bb(N)$が存在して、$(s, t) in R_i_1$、$(t, u) in R_i_2$が成り立つ。\
@@ -90,7 +66,8 @@
     よって$R^+$は$R$の推移的閉包である。
 ]
 
-#question("演習2.2.8.")[
+== 演習2.2.8.
+#answer[
     $R'_i (i in bb(N))$を以下のように帰納的に定義する。
     $
         &R'_0 &=& R union {(s, s) | s in S}\

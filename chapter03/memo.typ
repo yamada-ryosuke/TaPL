@@ -1,37 +1,12 @@
-// フォントを変える
-#set text(font: "Noto Sans CJK JP")
+#import "../template.typ": *
 
-// 句読点
-#show "。": "．"
-#show "、": "，"
-
-// 演習問題の解答の環境
-#let question(title, body) = [
-    == #title
-    #block(
-        fill: rgb("#e0ffff"),
-        inset: 8pt,
-        outset: 4pt,
-        radius: 4pt,
-        stroke: 1pt,
-    )[
-        #body
-    ]
-]
-
-// 左に線を引いてレベルを一個下げる
-#let down_level(body) = block(
-  inset: (left: 1em),
-  stroke: (left: 1pt + gray),
-  radius: 0pt,
-)[
-  #body
-]
+#show: config.with()
 
 // -------------------- ここから本文 --------------------
 = p.27 定理3.5.4の証明
 おそらく導出に関する帰納法を正しく使えていない。とはいえ、正しく使えていると解釈しようと思えばギリギリできなくもないくらいのラインでもあり、誤りであると断定はしきれない。そこで、構造帰納法を用いた証明を記載しておく。\
-#question("定理3.5.4.の構造的帰納法による証明")[
+== 定理3.5.4.の構造的帰納法による証明
+#answer[
     $t in cal(T)$に関する述語$P(t)$を「任意の$t', t'' in cal(T)$について、$t arrow t'$かつ$t arrow t''$ならば$t' = t''$」と定義する。任意の$t in cal(T)$について$P(t)$が成り立つことを示す。\
     #down_level[
         任意の直接の部分項$t_1$について$P(t_1)$が真となるような$t in cal(T)$を任意に取る。\
