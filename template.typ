@@ -21,6 +21,9 @@
     it,
   )
 
+  // enumのインデント設定
+  set enum(indent: 1em)
+
   // 本文
   body
 }
@@ -51,4 +54,4 @@
 ]
 
 // 多ステップ評価関係(矢印にアスタリスクがついたやつ)
-#let asterarrow = $attach(arrow, tr: *)$
+#let asterisk_arrow = $attach(arrow, tr: *)$
