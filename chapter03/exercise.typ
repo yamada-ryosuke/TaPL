@@ -433,3 +433,201 @@
     ]
   ]
 ]
+
+== 演習 3.5.17.
+#answer[
+  #down_level(description: [$t #asterisk_arrow v$ならば$t arrow.double.b v$を示す。])[
+    構造的帰納法により示す。
+    #down_level[
+      $t in cal(T)$を任意に取り、以下を仮定する。
+      - $t$の任意の部分項$t_1$に対して$t_1 #asterisk_arrow v_1$ならば$t_1 arrow.double.b v_1$が成り立つ。
+      - $t #asterisk_arrow v$。
+      #down_level(description: [$t$が値のとき])[
+        $
+          prooftree(
+            rule(
+              name: "B-VALUE",
+              t arrow.double.b t
+            )
+          )
+        $
+        より$t arrow.double.b t$。
+      ]
+      #down_level(description: [$t$が$"if" t_1 "then" t_2 "else" t_3$のとき])[
+        $t$が値に評価されることから$t_1 #asterisk_arrow v_1$となる($t_1$は行き詰まり状態に行きつかない)。ゆえに帰納法の仮定より$t_1 arrow.double.b v_1$。
+        #down_level(description: [$v_1$が$"true"$のとき])[
+          $"if" t_1 "then" t_2 "else" t_3 #asterisk_arrow "if" "true" "then" t_2 "else" t_3 #asterisk_arrow t_2$となるので、$t_2 #asterisk_arrow v$。よって帰納法の仮定より$t_2 arrow.double.b v$。
+          $
+            prooftree(
+              rule(
+                name: "B-IFTRUE",
+                t_1 arrow.double.b "true",
+                t_2 arrow.double.b v,
+                "if" "true" "then" t_2 "else" t_3 arrow.double.b v
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+        #down_level(description: [$v_1$が$"false"$のとき])[
+          $"if" t_1 "then" t_2 "else" t_3 #asterisk_arrow "if" "false" "then" t_2 "else" t_3 #asterisk_arrow t_3$となるので、$t_3 #asterisk_arrow v$。よって帰納法の仮定より$t_3 arrow.double.b v$。
+          $
+            prooftree(
+              rule(
+                name: "B-IFFALSE",
+                t_1 arrow.double.b "false",
+                t_3 arrow.double.b v,
+                "if" "true" "then" t_2 "else" t_3 arrow.double.b v
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+      ]
+      #down_level(description: [$t$が$"succ" t_1$のとき])[
+        $t$が値に評価されることから$t_1 #asterisk_arrow "nv"_1$となる。ゆえに帰納法の仮定より$t_1 arrow.double.b "nv"_1$。また、$"succ" t_1 #asterisk_arrow "succ" "nv"_1$となるので$v = "succ" "nv"_1$。
+        $
+          prooftree(
+            rule(
+              name: "B-SUCC",
+              t_1 arrow.double.b "nv"_1,
+              "succ" t_1 arrow.double.b "succ" "nv"_1
+            )
+          )
+        $
+        より$t arrow.double.b v$。
+      ]
+      #down_level(description: [$t$が$"pred" t_1$のとき])[
+        $t$が値に評価されることから$t_1 #asterisk_arrow "nv"_1$となる。ゆえに帰納法の仮定より$t_1 arrow.double.b "nv"_1$。
+        #down_level(description: [$"nv"_1$が$0$のとき])[
+          $"pred" t_1 #asterisk_arrow "pred" 0 #asterisk_arrow 0$となるので$v = 0$。
+          $
+            prooftree(
+              rule(
+                name: "B-PREDZERO",
+                t_1 arrow.double.b 0,
+                "pred" t_1 arrow.double.b 0
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+        #down_level(description: [$"nv"_1$が$"succ" "nv"_11$のとき])[
+          $"pred" t_1 #asterisk_arrow "pred" "succ" "nv"_11 #asterisk_arrow "nv"_11$となるので$v = "nv"_11$。
+          $
+            prooftree(
+              rule(
+                name: "B-PREDSUCC",
+                t_1 arrow.double.b "succ" "nv"_11,
+                "pred" t_1 arrow.double.b "nv"_11
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+      ]
+      #down_level(description: [$t$が$"iszero" t_1$のとき])[
+        $t$が値に評価されることから$t_1 #asterisk_arrow "nv"_1$となる。ゆえに帰納法の仮定より$t_1 arrow.double.b "nv"_1$。
+        #down_level(description: [$"nv"_1$が$0$のとき])[
+          $"iszero" t_1 #asterisk_arrow "iszero" 0 #asterisk_arrow "true"$となるので$v = "true"$。
+          $
+            prooftree(
+              rule(
+                name: "B-ISZEROZERO",
+                t_1 arrow.double.b 0,
+                "iszero" t_1 arrow.double.b "true"
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+        #down_level(description: [$"nv"_1$が$"succ" "nv"_11$のとき])[
+          $"iszero" t_1 #asterisk_arrow "iszero" "succ" "nv"_11 #asterisk_arrow "false"$となるので$v = "nv"_11$。
+          $
+            prooftree(
+              rule(
+                name: "B-ISZEROSUCC",
+                t_1 arrow.double.b "succ" "nv"_11,
+                "iszero" t_1 arrow.double.b "false"
+              )
+            )
+          $
+          より$t arrow.double.b v$。
+        ]
+      ]
+      よって$t arrow.double.b v$。
+    ]
+    よって任意の$t in cal(T)$に対して$t #asterisk_arrow v$ならば$t arrow.double.b v$。
+  ]
+  #down_level(description: [$t arrow.double.b v$ならば$t #asterisk_arrow v$を示す。])[
+    構造的帰納法により示す。
+    #down_level[
+      $t in cal(T)$を任意に取って、以下を仮定する。
+      - $t$の任意の部分項$t_1$に対して$t_1 arrow.double.b v_1$ならば$t_1 #asterisk_arrow v_1$。
+      - $t arrow.double.b v$。
+      $t arrow.double.b v$の導出$cal(D)$を一つ取る。
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-VALUE"$のとき])[
+        $t = v$は値なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-IFTRUE"$のとき])[
+        $t arrow.double.b v$は$"if" t_1 "then" t_2 "else" t_3 arrow.double.b v$と表せる。このとき、$t_1 arrow.double.b "true"$、$t_2 arrow.double.b v$。ゆえに帰納法の仮定より$t_1 #asterisk_arrow "true"$、$t_2 #asterisk_arrow v$。\
+        よって、$"if" t_1 "then" t_2 "else" t_3 #asterisk_arrow "if" "true" "then" t_2 "else" t_3 arrow t_2 #asterisk_arrow v$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-IFFALSE"$のとき])[
+        $t arrow.double.b v$は$"if" t_1 "then" t_2 "else" t_3 arrow.double.b v$と表せる。このとき、$t_1 arrow.double.b "false"$、$t_3 arrow.double.b v$。ゆえに帰納法の仮定より$t_1 #asterisk_arrow "false"$、$t_3 #asterisk_arrow v$。\
+        よって、$"if" t_1 "then" t_2 "else" t_3 #asterisk_arrow "if" "false" "then" t_2 "else" t_3 arrow t_3 #asterisk_arrow v$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-SUCC"$のとき])[
+        $t arrow.double.b v$は$"succ" t_1 arrow.double.b "succ" "nv"_1$と表せる。このとき、$t_1 arrow.double.b "nv"_1$なので、帰納法の仮定より$t_1 #asterisk_arrow "nv"_1$。\
+        よって、$"succ" t_1 #asterisk_arrow "succ" "nv"_1$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-PREDZERO"$のとき])[
+        $t arrow.double.b v$は$"pred" t_1 arrow.double.b 0$と表せる。このとき、$t_1 arrow.double.b 0$なので、帰納法の仮定より$t_1 #asterisk_arrow 0$。\
+        よって、$"pred" t_1 #asterisk_arrow "pred" 0 arrow 0$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-PREDSUCC"$のとき])[
+        $t arrow.double.b v$は$"pred" t_1 arrow.double.b "nv"_1$と表せる。このとき、$t_1 arrow.double.b "succ" "nv"_1$なので、帰納法の仮定より$t_1 #asterisk_arrow "succ" "nv"_1$。\
+        よって、$"pred" t_1 #asterisk_arrow "pred" "succ" "nv"_1 arrow "nv"_1$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-ISZEROZERO"$のとき])[
+        $t arrow.double.b v$は$"iszero" t_1 arrow.double.b "true"$と表せる。このとき、$t_1 arrow.double.b 0$なので、帰納法の仮定より$t_1 #asterisk_arrow 0$。\
+        よって、$"iszero" t_1 #asterisk_arrow "iszero" 0 arrow "true"$なので$t #asterisk_arrow v$。
+      ]
+      #down_level(description: [$cal(D)$の最後に使った評価規則が$"B-ISZEROSUCC"$のとき])[
+        $t arrow.double.b v$は$"iszero" t_1 arrow.double.b "nv"_1$と表せる。このとき、$t_1 arrow.double.b "succ" "nv"_1$なので、帰納法の仮定より$t_1 #asterisk_arrow "succ" "nv"_1$。\
+        よって、$"iszero" t_1 #asterisk_arrow "iszero" "succ" "nv"_1 arrow "false"$なので$t #asterisk_arrow v$。
+      ]
+      よって$t #asterisk_arrow v$。
+    ]
+    よって任意の$t in cal(T)$に対して$t arrow.double.b v$ならば$t #asterisk_arrow v$。
+  ]
+]
+
+== 演習 3.5.18.
+#answer[
+  正規形の項を文字$w$で表すとする。
+  then節とelse節が、この順番で条件部より先に評価されるようにするには、評価規則E-IFを以下の3つの評価規則に置き換えればよい。
+  $
+    prooftree(
+      rule(
+        name: "E-IFTHEN",
+        t_2 arrow t'_2,
+        "if" t_1 "then" t_2 "else" t_3 arrow "if" t_1 "then" t'_2 "else" t_3
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-IFELSE",
+        t_3 arrow t'_3,
+        "if" t_1 "then" w_2 "else" t_3 arrow "if" t_1 "then" w_2 "else" t'_3
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-IFTHEN",
+        t_1 arrow t'_1,
+        "if" t_1 "then" w_2 "else" w_3 arrow "if" t'_1 "then" w_2 "else" w_3
+      )
+    ),
+  $
+]
