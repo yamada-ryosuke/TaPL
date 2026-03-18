@@ -28,6 +28,7 @@ isval t
   | otherwise = False
 
 -- 1ステップ評価
+-- isnumericvalで条件分岐する辺りとか気持ち悪いし、行き詰まり状態があるせいで評価が失敗する場合を処理しないといけず、実装が面倒臭いが、それもこれも型無しのせい。きちんと型が付いてれば、型で分岐できるし、失敗しないのでモナドも不要になって、実装が楽になるはず。
 eval1 :: Term -> Maybe Term
 eval1 (TmIf TmTrue t2 t3) = Just t2 -- E-IFTRUE
 eval1 (TmIf TmFalse t2 t3) = Just t3 -- E-IFFALSE

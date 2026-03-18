@@ -48,7 +48,7 @@ $t arrow t'$かつ$t arrow t''$ならば$t' = t''$となる。
 == 定理3.5.8.
 $t$が正規形であるならば、$t$は値である。
 == 定理3.5.11. [正規形の一意性]
-$t asterarrow u$かつ$t asterarrow u'$で、$u$と$u'$が両方正規形ならば、$u = u'$が成り立つ。
+$t #asterisk_arrow u$かつ$t #asterisk_arrow u'$で、$u$と$u'$が両方正規形ならば、$u = u'$が成り立つ。
 == 定理3.5.12. [評価の停止性]
-すべての項$t$に対して、ある正規形$t'$が存在し、$t asterarrow t'$を満たす。
+すべての項$t$に対して、ある正規形$t'$が存在し、$t #asterisk_arrow t'$を満たす。
     
