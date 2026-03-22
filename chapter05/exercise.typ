@@ -1,0 +1,281 @@
+#import "../template.typ": *
+#import "@preview/curryst:0.6.0": prooftree, rule
+
+#show: config.with()
+
+== 演習 5.2.1.
+#answer[
+  $
+    & "or" = lambda b. space lambda c. space b space "tru" c; \
+    & "not" = lambda b. space b "fls" "tru";
+  $
+]
+
+== 演習 5.2.2.
+#answer[
+  $
+    "scc" = lambda n. space lambda f. space lambda x. space n space f space (f space x);
+  $
+]
+
+== 演習 5.2.3.
+#answer[
+  $
+    "times2" = lambda m. space lambda n. space lambda f. space m space (n space f);
+  $
+]
+
+== 演習 5.2.4.
+#answer[
+  $m^n$を以下のように定義できる。
+  $
+    "power" = lambda m. space lambda n. space n space m;
+  $
+]
+
+== 演習 5.2.5.
+#answer[
+  $
+    "subtract" = lambda m. space lambda n. space n "prd" m;
+  $
+]
+
+== 演習 5.2.6.
+#answer[
+  おおよそ$O(n)$回。とはいえ、もしも値呼びをするのであれば、そもそも$s$や$z$に具体的な値が代入されるまで評価されないので、$"prd" c_n$と書いただけでは最後まで評価が進まない。
+]
+
+== 演習 5.2.7.
+#answer[
+  $
+    "equal" = lambda m. space lambda n. "and" ("iszro" ("subtract" m n)) ("iszro" ("subtract" n m));
+  $
+]
+
+== 演習 5.2.8.
+#answer[
+  リストを表現する際、fold関数(指定した二項演算を繰り返してリストの全要素をまとめ上げる関数)で表現する。例えば、演算として足し算を、初期値として0を渡すと、リストの全ての要素を足した数が戻り値となる。以下の例では$c$に二項演算を、$n$に初期値を入れる。
+  $
+    & [x, y, z] = lambda c. space lambda n. space c space x space (c space y space (c space z space n)); \
+    & "nil" = lambda c. space lambda n. space n; \
+    & "cons" = lambda h. space lambda t. space lambda c. space lambda n. space c space h space (t space c space h); \
+    & "isnil" = lambda t. space t space (lambda x. space lambda y. "fls") "tru"; \
+    & "head" = lambda t. space t space (lambda x. space lambda y. space x) c_0; \
+    & "tail" = lambda t. "fst" (t space (lambda x. space lambda y. space "pair" ("snd" y) space ("cons" x space ("snd" y))) space ("pair" "nil" "nil"));
+  $
+]
+
+== 演習 5.2.9.
+#answer[
+  値呼び戦略は正格であるため、testを使うと$"fct" ("prd" c_1)$を評価する際に不要な$"fct" ("prd" c_0)$まで評価する必要が出てきてしまい、無限ループに陥るためifが使われている。もしもtestを使うのであれば、$"fct" ("prd" n)$部分を抽象で包んで値として扱われるようにすればよい。すなわち
+  $
+    g = lambda "fct". "test" ("iszro" n) space (lambda x. c_1) space ("times" n space lambda x. "fct" space ("prd" n)) space c_0
+  $
+]
+
+== 演習 5.2.10.
+#answer[
+  $
+    & g = lambda f. space lambda n. space "if" "iszero" n \
+    & #h(7em) "then" c_0 \
+    & #h(7em) "else" "scc" (f space ("pred" n)); \
+    & "churchnat" = "fix" g;
+  $
+]
+
+== 演習 5.2.11.
+#answer[
+  $
+    & g = lambda f. space lambda l. "test" ("isnil" l) space (lambda x. space c_0) space (lambda x. "plus" ("head" l) space (f space ("tail" l))) space c_0;\
+    & "sumlist" = "fix" g;
+  $
+]
+
+== 演習 5.3.3.
+#answer[
+  $t$上の構造的帰納法により示す。\
+  #down_level(description: [$t = x$のとき])[
+    $|"FV"(t)| = |{x}| = 1 = "size"(t)$より成り立つ。
+  ]
+  #down_level(description: [$|"FV"(t_1)| lt.eq "size"(t_1)$となる$t = lambda x.t_1$のとき])[
+    #down_level[
+      $x in "FV"(t_1)$のとき$|"FV"(t)| = |"FV"(t_1)| - 1$。
+    ]
+    #down_level[
+      $x in.not "FV"(t_1)$のとき$|"FV"(t)| = |"FV"(t_1)|$。
+    ]
+    ゆえに$|"FV"(t)| lt.eq |"FV"(t_1)| lt.eq "size"(t_1) lt "size"(t)$より成り立つ。
+  ]
+  #down_level(
+    description: [$|"FV"(t_1)| lt.eq "size"(t_1)$、$|"FV"(t_2)| lt.eq "size"(t_2)$となる$t = t_1 space t_2$のとき],
+  )[
+    $
+      |"FV"(t)| & = |"FV"(t_1) union "FV"(t_2)| \
+                & lt.eq |"FV"(t_1)| + |"FV"(t_2)| \
+                & lt.eq "size"(t_1) + "size"(t_2) \
+                & = "size"(t)
+    $
+  ]
+]
+
+== 演習 5.3.6.
+=== 完全ベータ簡約
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        t_1 arrow t'_1,
+        t_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APP2",
+        t_2 arrow t'_2,
+        t_1 t_2 arrow t_1 t'_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS",
+        t_1 arrow t'_1,
+        lambda x. t_1 arrow lambda x. t'_1
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+=== 正規順序
+#answer[
+  #math.equation[
+    #set align(left)
+    $
+      "nanf" ::= \
+      #h(3em) x \
+      #h(3em) "nanf" "nf" \
+      "nf" ::= \
+      #h(2em) lambda x. "nf" \
+      #h(2em) "nanf" \
+      "na" ::= \
+      #h(2em) x \
+      #h(2em) t_1 t_2
+    $
+  ]\
+  と定義する。
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        "na"_1 arrow t'_1,
+        "na"_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APP2",
+        t_2 arrow t'_2,
+        "nanf"_1 t_2 arrow "nanf"_1 t'_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS",
+        t_1 arrow t'_1,
+        lambda x. t_1 arrow lambda x. t'_1
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+=== 遅延評価
+遅延評価って同じ引数に対しての評価を一斉に実施するはずなので、こんな単純な戦略ではない気がするんだけど…。
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        t_1 arrow t'_1,
+        t_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+
+== 演習 5.3.7.
+#answer[
+  最終的に$"succ"(x space x)$とかに評価されるようなものでも$"wrong"$に評価されないけど、(文脈自由である以上？)仕方がない。\
+  #math.equation[
+    #set align(left)
+    $
+      "badnat" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "true"\
+      #h(4em) "false"\
+      #h(4em) lambda x. t\
+      "badbool" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "nv"\
+      #h(4em) lambda x. t\
+      "badabs" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "nv"\
+      #h(4em) "true"\
+      #h(4em) "false"\
+    $
+  ]\
+  として、nbの規則に以下を付け加える。
+  $
+    prooftree(
+      rule(
+        name: "E-APP-WRONG",
+        t_1 arrow "badabs",
+        t_1 t_2 arrow "wrong"
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS-WRONG",
+        t_1 arrow "wrong",
+        lambda x.t arrow "wrong"
+      )
+    )\
+  $
+]
+
+== 演習 5.3.8.
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "B-ABS",
+        lambda x. t arrow.b.double lambda x. t
+      )
+    )\
+    prooftree(
+      rule(
+        name: "B-ABS",
+        t_1 arrow.b.double lambda x. t_(1 2),
+        t_2 arrow.b.double v_2,
+        [t_2 arrow.bar v_2]t_(1 2) arrow.b.double v,
+        t_1 t_2 arrow.b.double v
+      )
+    )
+  $
+]
