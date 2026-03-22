@@ -1,4 +1,5 @@
 #import "../template.typ": *
+#import "@preview/curryst:0.6.0": prooftree, rule
 
 #show: config.with()
 
@@ -91,3 +92,190 @@
 ]
 
 == 演習 5.3.3.
+#answer[
+  $t$上の構造的帰納法により示す。\
+  #down_level(description: [$t = x$のとき])[
+    $|"FV"(t)| = |{x}| = 1 = "size"(t)$より成り立つ。
+  ]
+  #down_level(description: [$|"FV"(t_1)| lt.eq "size"(t_1)$となる$t = lambda x.t_1$のとき])[
+    #down_level[
+      $x in "FV"(t_1)$のとき$|"FV"(t)| = |"FV"(t_1)| - 1$。
+    ]
+    #down_level[
+      $x in.not "FV"(t_1)$のとき$|"FV"(t)| = |"FV"(t_1)|$。
+    ]
+    ゆえに$|"FV"(t)| lt.eq |"FV"(t_1)| lt.eq "size"(t_1) lt "size"(t)$より成り立つ。
+  ]
+  #down_level(
+    description: [$|"FV"(t_1)| lt.eq "size"(t_1)$、$|"FV"(t_2)| lt.eq "size"(t_2)$となる$t = t_1 space t_2$のとき],
+  )[
+    $
+      |"FV"(t)| & = |"FV"(t_1) union "FV"(t_2)| \
+                & lt.eq |"FV"(t_1)| + |"FV"(t_2)| \
+                & lt.eq "size"(t_1) + "size"(t_2) \
+                & = "size"(t)
+    $
+  ]
+]
+
+== 演習 5.3.6.
+=== 完全ベータ簡約
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        t_1 arrow t'_1,
+        t_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APP2",
+        t_2 arrow t'_2,
+        t_1 t_2 arrow t_1 t'_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS",
+        t_1 arrow t'_1,
+        lambda x. t_1 arrow lambda x. t'_1
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+=== 正規順序
+#answer[
+  #math.equation[
+    #set align(left)
+    $
+      "nanf" ::= \
+      #h(3em) x \
+      #h(3em) "nanf" "nf" \
+      "nf" ::= \
+      #h(2em) lambda x. "nf" \
+      #h(2em) "nanf" \
+      "na" ::= \
+      #h(2em) x \
+      #h(2em) t_1 t_2
+    $
+  ]\
+  と定義する。
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        "na"_1 arrow t'_1,
+        "na"_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APP2",
+        t_2 arrow t'_2,
+        "nanf"_1 t_2 arrow "nanf"_1 t'_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS",
+        t_1 arrow t'_1,
+        lambda x. t_1 arrow lambda x. t'_1
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+=== 遅延評価
+遅延評価って同じ引数に対しての評価を一斉に実施するはずなので、こんな単純な戦略ではない気がするんだけど…。
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "E-APP1",
+        t_1 arrow t'_1,
+        t_1 t_2 arrow t'_1 t_2
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-APPABS",
+        (lambda x. t_(1 2)) t_2 arrow [x arrow.bar t_2]t_(1 2)
+      )
+    )
+  $
+]
+
+== 演習 5.3.7.
+#answer[
+  最終的に$"succ"(x space x)$とかに評価されるようなものでも$"wrong"$に評価されないけど、(文脈自由である以上？)仕方がない。\
+  #math.equation[
+    #set align(left)
+    $
+      "badnat" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "true"\
+      #h(4em) "false"\
+      #h(4em) lambda x. t\
+      "badbool" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "nv"\
+      #h(4em) lambda x. t\
+      "badabs" ::=\
+      #h(4em) "wrong"\
+      #h(4em) "nv"\
+      #h(4em) "true"\
+      #h(4em) "false"\
+    $
+  ]\
+  として、nbの規則に以下を付け加える。
+  $
+    prooftree(
+      rule(
+        name: "E-APP-WRONG",
+        t_1 arrow "badabs",
+        t_1 t_2 arrow "wrong"
+      )
+    )\
+    prooftree(
+      rule(
+        name: "E-ABS-WRONG",
+        t_1 arrow "wrong",
+        lambda x.t arrow "wrong"
+      )
+    )\
+  $
+]
+
+== 演習 5.3.8.
+#answer[
+  $
+    prooftree(
+      rule(
+        name: "B-ABS",
+        lambda x. t arrow.b.double lambda x. t
+      )
+    )\
+    prooftree(
+      rule(
+        name: "B-ABS",
+        t_1 arrow.b.double lambda x. t_(1 2),
+        t_2 arrow.b.double v_2,
+        [t_2 arrow.bar v_2]t_(1 2) arrow.b.double v,
+        t_1 t_2 arrow.b.double v
+      )
+    )
+  $
+]
