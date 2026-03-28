@@ -270,7 +270,7 @@
     )\
     prooftree(
       rule(
-        name: "B-ABS",
+        name: "B-APP",
         t_1 arrow.b.double lambda x. t_(1 2),
         t_2 arrow.b.double v_2,
         [t_2 arrow.bar v_2]t_(1 2) arrow.b.double v,
