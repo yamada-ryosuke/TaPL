@@ -28,6 +28,9 @@
   body
 }
 
+// 数式環境内で日本語フォントの文字列を表示する
+#let ja(content) = text(font: "Noto Sans CJK JP")[#content]
+
 // 演習問題の解答の環境
 #let answer(body) = [
   #block(
