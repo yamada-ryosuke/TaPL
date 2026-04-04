@@ -1,4 +1,4 @@
--- 項の型定義
+-- 項の型定義(Tmはtermの略)
 data Term
   = TmTrue
   | TmFalse
